@@ -132,5 +132,44 @@
             }
         }
     </script>
+
+
+<audio id="bg-music" src="BG_sound.mp3" loop></audio>
+<audio id="victory-sound" src="victory_sound.mp3"></audio>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<script>
+let bgStarted = false;
+document.body.addEventListener('click', () => {
+    if (!bgStarted) {
+        document.getElementById('bg-music').play();
+        bgStarted = true;
+    }
+});
+
+function showConfetti() {
+    const duration = 2 * 1000;
+    const end = Date.now() + duration;
+    const confettiDefaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
+
+    const interval = setInterval(() => {
+        if (Date.now() > end) return clearInterval(interval);
+        confetti(Object.assign({}, confettiDefaults, { particleCount: 50, origin: { x: Math.random(), y: 0 } }));
+    }, 200);
+}
+
+// Modify the existing checkCode function
+const oldCheckCode = checkCode;
+function checkCode() {
+    const digits = document.querySelectorAll('.digit');
+    const code = Array.from(digits).map(d => d.value).join('');
+    if (code === '2856') {
+        document.getElementById('victory-sound').play();
+        showConfetti();
+        setTimeout(() => {
+            window.location.href = "http://lera-birthday.com/win";
+        }, 3000);
+    }
+}
+</script>
 </body>
 </html>
