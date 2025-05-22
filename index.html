@@ -2,174 +2,135 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Волшебный Сейф</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background: url('BG.png') no-repeat center center fixed;
-      background-size: cover;
-    }
-    h1 {
-      text-align: center;
-      color: white;
-      font-size: 3em;
-      text-shadow: 2px 2px 4px #000;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2em;
-    }
-    .question-box {
-      background: rgba(0, 0, 0, 0.5);
-      color: white;
-      padding: 1em 2em;
-      border-radius: 20px;
-      margin-right: 3em;
-      font-size: 1.3em;
-    }
-    .safe {
-      position: relative;
-    }
-    .digits {
-      position: absolute;
-      top: 36%;
-      left: 14%;
-      width: 72%;
-      display: flex;
-      justify-content: space-between;
-    }
-    .digit {
-      font-size: 1.5em;
-      width: 50px;
-      height: 50px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Волшебный сейф</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-image: url('BG.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        .questions {
+            margin: 20px auto;
+            max-width: 600px;
+            font-size: 1.2em;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .safe-container {
+            position: relative;
+            width: 400px;
+            margin: 30px auto;
+        }
+
+        .safe {
+            width: 100%;
+        }
+
+        .dials {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dial {
+            width: 40px;
+            height: 60px;
+            font-size: 2em;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .dial:focus {
+            outline: none;
+            transform: rotateX(360deg);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .message {
+            font-size: 1.4em;
+            margin-top: 20px;
+            color: yellow;
+            text-shadow: 2px 2px 5px #000;
+        }
+    </style>
 </head>
 <body>
-
-<h1>Ты молодец! Последний шаг!</h1>
-<div class="container">
-  <div class="question-box">
-    <p>Чтобы открыть сейф, ответь на 4 вопроса:</p>
-    <p>1. Сколько раз ты купалась в Персидском заливе?</p>
-    <p>2. Сколько персонажей было в фильме "Там, где мы были"?</p>
-    <p>3. Сколько было комнат в домике на Новый год?</p>
-    <p>4. Сколько татуировок у Владика? (фото смотреть нельзя!)</p>
-  </div>
-  <div class="safe">
-    <img src="save.png" alt="Сейф">
-    <div class="digits">
-      <input type="number" min="0" max="9" class="digit" id="d1">
-      <input type="number" min="0" max="9" class="digit" id="d2">
-      <input type="number" min="0" max="9" class="digit" id="d3">
-      <input type="number" min="0" max="9" class="digit" id="d4">
+    <h1>Ты молодец! Последний шаг!</h1>
+    <div class="questions">
+        <p>Чтобы открыть сейф, ответь на 4 вопроса:</p>
+        <p>1. Сколько раз ты купалась в Персидском заливе?</p>
+        <p>2. Сколько персонажей было в фильме "Там, где мы были"?</p>
+        <p>3. Сколько было комнат в домике на Новый год?</p>
+        <p>4. Сколько татуировок у Владика? (фото смотреть нельзя!)</p>
     </div>
-  </div>
-</div>
 
-<audio id="bg-music" src="BG_sound.wav" loop></audio>
-<audio id="victory-sound" src="victory_sound.wav"></audio>
+    <div class="safe-container">
+        <img src="save.png" alt="safe" class="safe">
+        <div class="dials">
+            <input type="number" min="0" max="9" class="dial" id="digit1">
+            <input type="number" min="0" max="9" class="dial" id="digit2">
+            <input type="number" min="0" max="9" class="dial" id="digit3">
+            <input type="number" min="0" max="9" class="dial" id="digit4">
+        </div>
+    </div>
 
-<canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;"></canvas>
+    <div class="message hidden" id="successMessage">Ты справилась! 🎉 Сейф открыт!</div>
 
-<script>
-  // Проигрывание фоновой музыки при первом клике
-  let hasStarted = false;
-  window.addEventListener('click', () => {
-    if (!hasStarted) {
-      document.getElementById('bg-music').play();
-      hasStarted = true;
-    }
-  });
+    <audio autoplay loop>
+        <source src="BG_sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="victorySound">
+        <source src="victory_sound.mp3" type="audio/mpeg">
+    </audio>
 
-  // Проверка кода и победные эффекты
-  function checkCode() {
-    const d1 = document.getElementById('d1').value;
-    const d2 = document.getElementById('d2').value;
-    const d3 = document.getElementById('d3').value;
-    const d4 = document.getElementById('d4').value;
+    <script>
+        const correctCode = [2, 8, 5, 6];
+        const inputs = [
+            document.getElementById("digit1"),
+            document.getElementById("digit2"),
+            document.getElementById("digit3"),
+            document.getElementById("digit4"),
+        ];
 
-    if (d1 === '2' && d2 === '8' && d3 === '5' && d4 === '6') {
-      document.getElementById('victory-sound').play();
-      launchConfetti();
-      setTimeout(() => {
-        window.location.href = "https://lera-birthday.com/win";
-      }, 3000);
-    }
-  }
+        inputs.forEach(input => {
+            input.addEventListener("input", checkCode);
+        });
 
-  document.querySelectorAll('.digit').forEach(input => {
-    input.addEventListener('change', checkCode);
-  });
-
-  // Конфетти
-  function launchConfetti() {
-    const canvas = document.getElementById('confetti-canvas');
-    const context = canvas.getContext('2d');
-    const pieces = 150;
-    const confetti = [];
-
-    for (let i = 0; i < pieces; i++) {
-      confetti.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        r: Math.random() * 6 + 4,
-        d: Math.random() * pieces,
-        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-        tilt: Math.floor(Math.random() * 10) - 10,
-        tiltAngleIncremental: (Math.random() * 0.07) + 0.05,
-        tiltAngle: 0
-      });
-    }
-
-    function draw() {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      confetti.forEach(c => {
-        context.beginPath();
-        context.lineWidth = c.r;
-        context.strokeStyle = c.color;
-        context.moveTo(c.x + c.tilt + c.r / 2, c.y);
-        context.lineTo(c.x + c.tilt, c.y + c.tilt + c.r / 2);
-        context.stroke();
-      });
-
-      update();
-    }
-
-    function update() {
-      confetti.forEach((c, i) => {
-        c.tiltAngle += c.tiltAngleIncremental;
-        c.y += (Math.cos(c.d) + 3 + c.r / 2) / 2;
-        c.x += Math.sin(c.d);
-        c.tilt = Math.sin(c.tiltAngle - (i / 3)) * 15;
-
-        if (c.y > canvas.height) {
-          c.y = -20;
-          c.x = Math.random() * canvas.width;
+        function checkCode() {
+            const code = inputs.map(input => parseInt(input.value));
+            if (code.every((val, i) => val === correctCode[i])) {
+                document.getElementById("successMessage").classList.remove("hidden");
+                document.getElementById("victorySound").play();
+                setTimeout(() => {
+                    window.location.href = "https://lera-birthday.com/win";
+                }, 3000);
+            }
         }
-      });
-    }
-
-    function loop() {
-      draw();
-      requestAnimationFrame(loop);
-    }
-
-    loop();
-  }
-
-  // Автоматическая подгонка canvas
-  window.addEventListener('resize', () => {
-    const canvas = document.getElementById('confetti-canvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-  window.dispatchEvent(new Event('resize'));
-</script>
-
+    </script>
 </body>
 </html>
