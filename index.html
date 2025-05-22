@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Волшебный сейф</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        .questions {
+            margin: 20px auto;
+            max-width: 600px;
+            font-size: 1.2em;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .safe-container {
+            position: relative;
+            width: 400px;
+            margin: 30px auto;
+        }
+
+        .safe {
+            width: 100%;
+        }
+
+        .dials {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dial {
+            width: 40px;
+            height: 60px;
+            font-size: 2em;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .dial:focus {
+            outline: none;
+            transform: rotateX(360deg);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .message {
+            font-size: 1.4em;
+            margin-top: 20px;
+            color: yellow;
+            text-shadow: 2px 2px 5px #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ты молодец! Последний шаг!</h1>
+    <div class="questions">
+        <p>Чтобы открыть сейф, ответь на 4 вопроса:</p>
+        <p>1. Сколько раз ты купалась в Персидском заливе?</p>
+        <p>2. Сколько персонажей было в фильме "Там, где мы были"?</p>
+        <p>3. Сколько было комнат в домике на Новый год?</p>
+        <p>4. Сколько татуировок у Владика? (фото смотреть нельзя!)</p>
+    </div>
+
+    <div class="safe-container">
+        <img src="safe.png" alt="safe" class="safe">
+        <div class="dials">
+            <input type="number" min="0" max="9" class="dial" id="digit1">
+            <input type="number" min="0" max="9" class="dial" id="digit2">
+            <input type="number" min="0" max="9" class="dial" id="digit3">
+            <input type="number" min="0" max="9" class="dial" id="digit4">
+        </div>
+    </div>
+
+    <div class="message hidden" id="successMessage">Ты справилась! 🎉 Сейф открыт!</div>
+
+    <audio autoplay loop>
+        <source src="background_music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="victorySound">
+        <source src="victory.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const correctCode = [2, 8, 5, 6];
+        const inputs = [
+            document.getElementById("digit1"),
+            document.getElementById("digit2"),
+            document.getElementById("digit3"),
+            document.getElementById("digit4"),
+        ];
+
+        inputs.forEach(input => {
+            input.addEventListener("input", checkCode);
+        });
+
+        function checkCode() {
+            const code = inputs.map(input => parseInt(input.value));
+            if (code.every((val, i) => val === correctCode[i])) {
+                document.getElementById("successMessage").classList.remove("hidden");
+                document.getElementById("victorySound").play();
+                setTimeout(() => {
+                    window.location.href = "https://lera-birthday.com/win";
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
