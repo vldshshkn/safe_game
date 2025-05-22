@@ -86,7 +86,7 @@
         }
     </style>
 </head>
-<body>
+<body onclick="startMusic()">
     <h1>Ты молодец! Последний шаг!</h1>
     <div class="questions">
         <p>Чтобы открыть сейф, ответь на 4 вопроса:</p>
@@ -108,7 +108,7 @@
 
     <div class="message hidden" id="successMessage">Ты справилась! 🎉 Сейф открыт!</div>
 
-    <audio autoplay loop>
+    <audio id="bgMusic">
         <source src="BG_sound.mp3" type="audio/mpeg">
     </audio>
     <audio id="victorySound">
@@ -126,6 +126,14 @@
             document.getElementById("digit3"),
             document.getElementById("digit4"),
         ];
+
+        let musicStarted = false;
+        function startMusic() {
+            if (!musicStarted) {
+                document.getElementById("bgMusic").play();
+                musicStarted = true;
+            }
+        }
 
         inputs.forEach(input => {
             input.addEventListener("input", checkCode);
