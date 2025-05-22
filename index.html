@@ -2,174 +2,125 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Волшебный сейф</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-image: url('BG.png');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            text-align: center;
-        }
-
-        h1 {
-            margin-top: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 5px #000;
-        }
-
-        .questions {
-            margin: 20px auto;
-            max-width: 600px;
-            font-size: 1.2em;
-            background-color: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 20px;
-        }
-
-        .safe-container {
-            position: relative;
-            width: 400px;
-            margin: 30px auto;
-        }
-
-        .safe {
-            width: 100%;
-        }
-
-        .dials {
-            position: absolute;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-
-        .dial {
-            width: 40px;
-            height: 60px;
-            font-size: 2em;
-            text-align: center;
-            border: none;
-            border-radius: 10px;
-            background: white;
-            color: #333;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .dial:focus {
-            outline: none;
-            transform: rotateX(360deg);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .message {
-            font-size: 1.4em;
-            margin-top: 20px;
-            color: yellow;
-            text-shadow: 2px 2px 5px #000;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Волшебный Сейф</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-image: url('BG.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100vh;
+      padding: 50px;
+    }
+    .prompt {
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 20px;
+      color: white;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    .title {
+      font-size: 36px;
+      color: white;
+      text-align: center;
+      margin-top: 20px;
+      font-family: sans-serif;
+    }
+    .safe-container {
+      position: relative;
+    }
+    .safe {
+      width: 300px;
+    }
+    .code-inputs {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 10px;
+    }
+    .code-inputs input {
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <h1>Ты молодец! Последний шаг!</h1>
-    <div class="questions">
-        <p>Чтобы открыть сейф, ответь на 4 вопроса:</p>
-        <p>1. Сколько раз ты купалась в Персидском заливе?</p>
-        <p>2. Сколько персонажей было в фильме "Там, где мы были"?</p>
-        <p>3. Сколько было комнат в домике на Новый год?</p>
-        <p>4. Сколько татуировок у Владика? (фото смотреть нельзя!)</p>
+  <audio id="bg-music" src="BG_sound.wav" loop></audio>
+  <audio id="victory-sound" src="victory_sound.wav"></audio>
+
+  <div class="title">Ты молодец! Последний шаг!</div>
+
+  <div class="container" onclick="playBgMusic()">
+    <div class="prompt">
+      Чтобы открыть сейф, ответь на 4 вопроса:
+      <ol>
+        <li>Сколько раз ты купалась в Персидском заливе?</li>
+        <li>Сколько персонажей было в фильме "Там, где мы были"?</li>
+        <li>Сколько было комнат в домике на Новый год?</li>
+        <li>Сколько татуировок у Владика? (фото смотреть нельзя!)</li>
+      </ol>
     </div>
 
     <div class="safe-container">
-        <img src="save.png" alt="safe" class="safe">
-        <div class="dials">
-            <input type="number" min="0" max="9" class="dial" id="digit1">
-            <input type="number" min="0" max="9" class="dial" id="digit2">
-            <input type="number" min="0" max="9" class="dial" id="digit3">
-            <input type="number" min="0" max="9" class="dial" id="digit4">
-        </div>
+      <img src="save.png" alt="Сейф" class="safe"/>
+      <div class="code-inputs">
+        <input type="number" id="digit1" min="0" max="9" value="0">
+        <input type="number" id="digit2" min="0" max="9" value="0">
+        <input type="number" id="digit3" min="0" max="9" value="0">
+        <input type="number" id="digit4" min="0" max="9" value="0">
+      </div>
     </div>
+  </div>
 
-    <div class="message hidden" id="successMessage">Ты справилась! 🎉 Сейф открыт!</div>
-
-    <audio autoplay loop>
-        <source src="BG_sound.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="victorySound">
-        <source src="victory_sound.mp3" type="audio/mpeg">
-    </audio>
-
-    <script>
-        const correctCode = [2, 8, 5, 6];
-        const inputs = [
-            document.getElementById("digit1"),
-            document.getElementById("digit2"),
-            document.getElementById("digit3"),
-            document.getElementById("digit4"),
-        ];
-
-        inputs.forEach(input => {
-            input.addEventListener("input", checkCode);
-        });
-
-        function checkCode() {
-            const code = inputs.map(input => parseInt(input.value));
-            if (code.every((val, i) => val === correctCode[i])) {
-                document.getElementById("successMessage").classList.remove("hidden");
-                document.getElementById("victorySound").play();
-                setTimeout(() => {
-                    window.location.href = "https://lera-birthday.com/win";
-                }, 3000);
-            }
-        }
-    </script>
-
-
-<audio id="bg-music" src="BG_sound.mp3" loop></audio>
-<audio id="victory-sound" src="victory_sound.mp3"></audio>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-<script>
-let bgStarted = false;
-document.body.addEventListener('click', () => {
-    if (!bgStarted) {
-        document.getElementById('bg-music').play();
-        bgStarted = true;
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    function playBgMusic() {
+      const music = document.getElementById("bg-music");
+      if (music.paused) {
+        music.play();
+      }
     }
-});
 
-function showConfetti() {
-    const duration = 2 * 1000;
-    const end = Date.now() + duration;
-    const confettiDefaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
+    function showConfetti() {
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.3 }
+      });
+    }
 
-    const interval = setInterval(() => {
-        if (Date.now() > end) return clearInterval(interval);
-        confetti(Object.assign({}, confettiDefaults, { particleCount: 50, origin: { x: Math.random(), y: 0 } }));
-    }, 200);
-}
+    function checkCode() {
+      const d1 = document.getElementById("digit1").value;
+      const d2 = document.getElementById("digit2").value;
+      const d3 = document.getElementById("digit3").value;
+      const d4 = document.getElementById("digit4").value;
 
-// Modify the existing checkCode function
-const oldCheckCode = checkCode;
-function checkCode() {
-    const digits = document.querySelectorAll('.digit');
-    const code = Array.from(digits).map(d => d.value).join('');
-    if (code === '2856') {
-        document.getElementById('victory-sound').play();
+      if (`${d1}${d2}${d3}${d4}` === "2856") {
+        document.getElementById("victory-sound").play();
         showConfetti();
         setTimeout(() => {
-            window.location.href = "http://lera-birthday.com/win";
-        }, 3000);
+          window.location.href = "https://lera-birthday.com/win";
+        }, 2500);
+      }
     }
-}
-</script>
+
+    document.querySelectorAll(".code-inputs input").forEach(input => {
+      input.addEventListener("change", checkCode);
+    });
+  </script>
 </body>
 </html>
