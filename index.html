@@ -77,6 +77,16 @@
             color: yellow;
             text-shadow: 2px 2px 5px #000;
         }
+
+        canvas#confetti-canvas {
+            position: fixed;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
@@ -101,13 +111,13 @@
 
     <div class="message hidden" id="successMessage">Ты справилась! 🎉 Сейф открыт!</div>
 
-    <audio autoplay loop>
-        <source src="BG_sound.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bg-music" src="BG_sound.mp3" loop></audio>
     <audio id="victorySound">
         <source src="victory_sound.mp3" type="audio/mpeg">
     </audio>
+    <canvas id="confetti-canvas"></canvas>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <script>
         const correctCode = [2, 8, 5, 6];
         const inputs = [
@@ -116,6 +126,15 @@
             document.getElementById("digit3"),
             document.getElementById("digit4"),
         ];
+        const bgMusic = document.getElementById("bg-music");
+        let bgStarted = false;
+
+        document.body.addEventListener("click", () => {
+            if (!bgStarted) {
+                bgMusic.play();
+                bgStarted = true;
+            }
+        });
 
         inputs.forEach(input => {
             input.addEventListener("input", checkCode);
@@ -126,10 +145,36 @@
             if (code.every((val, i) => val === correctCode[i])) {
                 document.getElementById("successMessage").classList.remove("hidden");
                 document.getElementById("victorySound").play();
+                fireConfetti();
                 setTimeout(() => {
                     window.location.href = "https://lera-birthday.com/win";
                 }, 3000);
             }
+        }
+
+        function fireConfetti() {
+            const duration = 2 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(() => {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                }));
+                confetti(Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                }));
+            }, 250);
         }
     </script>
 </body>
