@@ -8,7 +8,7 @@
         body {
             margin: 0;
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-image: url('background.jpg');
+            background-image: url('BG.jpeg');
             background-size: cover;
             background-position: center;
             color: white;
@@ -90,7 +90,7 @@
     </div>
 
     <div class="safe-container">
-        <img src="safe.png" alt="safe" class="safe">
+        <img src="save.png" alt="safe" class="safe">
         <div class="dials">
             <input type="number" min="0" max="9" class="dial" id="digit1">
             <input type="number" min="0" max="9" class="dial" id="digit2">
@@ -102,10 +102,10 @@
     <div class="message hidden" id="successMessage">Ты справилась! 🎉 Сейф открыт!</div>
 
     <audio autoplay loop>
-        <source src="background_music.mp3" type="audio/mpeg">
+        <source src="BG_sound.mp3" type="audio/mpeg">
     </audio>
     <audio id="victorySound">
-        <source src="victory.mp3" type="audio/mpeg">
+        <source src="victory_sound.mp3" type="audio/mpeg">
     </audio>
 
     <script>
