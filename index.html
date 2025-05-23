@@ -143,5 +143,75 @@
             })();
         }
     </script>
+
+<!-- Магическая пыльца -->
+<canvas id="particles" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;"></canvas>
+
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particles = [];
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Particle {
+    constructor() {
+        this.reset();
+    }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 2 + 1;
+        this.alpha = Math.random();
+        this.speed = Math.random() * 0.5 + 0.2;
+    }
+    update() {
+        this.y -= this.speed;
+        if (this.y < 0) this.reset();
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255," + this.alpha + ")";
+        ctx.fill();
+    }
+}
+
+for (let i = 0; i < 150; i++) {
+    particles.push(new Particle());
+}
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let p of particles) {
+        p.update();
+        p.draw();
+    }
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+</script>
+
+<!-- Светящийся глоу по краям -->
+<style>
+body::before {
+    content: "";
+    position: fixed;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+</style>
+
 </body>
+
 </html>
